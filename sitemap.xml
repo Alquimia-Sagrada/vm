@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://sitemaps.org">
+  
+  <!-- Tu página de inicio -->
+  <url>
+    <loc>https://alquimiasagrada-vm.vercel.app/index.html</loc>
+  </url>
+
+  <!-- Si tienes otra página, agrégala así (si no, borra estas 3 líneas) -->
+  <url>
+    <loc>https://alquimiasagrada-vm.vercel.app/sobre-mi.html</loc>
+  </url>
+
+</urlset>
