@@ -262,6 +262,37 @@
     .music-info { display: none; }
     .music-player { bottom: 15px; right: 15px; }
   }
+
+  /* ---- RENDIMIENTO EN MOBILE: fuera los backdrop-filter ----
+     Esta página tenía cuatro backdrop-filter. El que más costaba no era
+     el más grande, sino el más pequeño: .music-player es position:fixed,
+     así que el navegador tenía que volver a leer y difuminar el fondo en
+     CADA frame de scroll.
+     En desktop se dejan como están (la GPU de escritorio los aguanta y el
+     cristal se nota); en mobile se quitan y se suben las opacidades de los
+     fondos para que el texto siga siendo legible sin el difuminado. */
+  @media (max-width: 960px) {
+    .nav-back-btn {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(255, 250, 240, 0.92);
+    }
+    .gallery-arrow {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(255, 250, 240, 0.97);
+    }
+    .card-bio {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(255, 250, 240, 0.95);
+    }
+    .music-player {
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      background: rgba(255, 250, 240, 0.97);
+    }
+  }
 </style>
 </head>
 <body>

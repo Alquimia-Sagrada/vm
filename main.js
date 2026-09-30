@@ -94,12 +94,16 @@ const audio = document.getElementById('bg-audio');
 
     function typeWriter() {
       if (charIndex < textToType.length) {
-        const char = textToType.charAt(charIndex);
-        if (char === '\n') {
-          typewriterElement.innerHTML += '<br>';
-        } else {
-          typewriterElement.innerHTML += char;
-        }
+        // Antes esto era `innerHTML += char` (y `+= '<br>'` en los saltos de
+        // línea). El `+=` sobre innerHTML hace leer todo el HTML vigente,
+        // concatenar, y reparsearlo entero: un parseo de HTML + un reflow
+        // por carácter, unas 50 veces seguidas, en el hero, apenas carga la
+        // página. Es justo lo que provocaba los saltos del cursor-blink que
+        // Lighthouse veía en div.hero-block.
+        // Ahora el texto vive en una variable y se escribe de una sola vez
+        // como nodo de texto (sin HTML que parsear). Los \n se respetan
+        // gracias a white-space: pre-line en el CSS de #typewriter-text.
+        typewriterElement.textContent = textToType.slice(0, charIndex);
         charIndex++;
         setTimeout(typeWriter, 45); // Velocidad de tipeo
       }

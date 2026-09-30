@@ -305,3 +305,36 @@ body {
   color: var(--text-muted);
 }
 
+/* =========================================================================
+   AJUSTES DE RENDIMIENTO EN MOBILE
+   Los dos efectos de abajo son de los que más consumen en una GPU de
+   mobile, que es la que va justita. Se desactivan por debajo de 960px (el
+   mismo breakpoint que usa index.css para el layout mobile) y se sustituyen
+   por fondos opacos que se ven casi idénticos.
+   En desktop no se toca nada: las GPUs de escritorio los aguanta sin
+   problema y el efecto difuminado ahí sí se nota.
+
+   1) backdrop-filter — obliga al navegador a leer lo que hay detrás del
+      elemento y a difuminarlo. Con un .site-footer fijo y contenido que
+      se mueve abajo, eso se recalcula en cada frame de scroll.
+   2) mix-blend-mode en el grano — un elemento con blend no se puede
+      componer por separado: el navegador tiene que leer el fondo y mezclar.
+      Como el grano es fixed a pantalla completa, cada frame que se mueve
+      algo obliga a mezclar toda la pantalla entera.
+   ========================================================================= */
+@media (max-width: 960px) {
+  /* Sin difuminado el fondo semitransparente deja pasar el contenido de
+     abajo, así que se sube la opacidad para compensarlo. */
+  .site-footer {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(250, 243, 232, 0.97);
+  }
+
+  /* A opacity 0.035 la diferencia entre multiply y normal es imperceptible,
+     así que conservamos la textura y solo sacamos el modo de fusión. */
+  .grain-overlay {
+    mix-blend-mode: normal;
+  }
+}
+

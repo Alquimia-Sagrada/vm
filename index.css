@@ -295,6 +295,12 @@
     text-shadow: 0 0 15px rgba(201, 152, 47, 0.15);
   }
 
+  /* La máquina de escribir ahora escribe el texto con textContent (nodo de
+     texto plano) en vez de innerHTML += '<br>'. Para que los saltos de línea
+     del string se sigan viendo hay que respetar los \n: antes los <br> los
+     traducía el parser de HTML, ahora los traduce esta propiedad. */
+  #typewriter-text { white-space: pre-line; }
+
   .brand-tagline {
     font-family: var(--font-script);
     font-size: clamp(1.6rem, 2.6vw, 2.1rem);
