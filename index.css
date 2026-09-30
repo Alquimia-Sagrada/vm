@@ -283,7 +283,15 @@
     color: var(--gold);
     line-height: 1.5;
     letter-spacing: 0.05em;
-    min-height: 3.2em; /* Espacio reservado para evitar saltos */
+    /* Alto reservado para las 3 líneas que escribe la máquina
+       ("Terapias Holísticas" / "Terapeuta, facilitadora" / "Ivana I.
+       Lamberti"): 3 × line-height 1.5 = 4.5em, más un poco de aire. Antes
+       reservaba 3.2em, o sea una línea menos de las que finalmente ocupa, así
+       que el tagline y el resto del hero se corrían hacia abajo al terminar
+       de tipear. No era el culpable principal del CLS (ver el script inline
+       al final de <main> en index.html, que sí lo era), pero conviene que el
+       contenedor tenga su alto final desde el arranque. */
+    min-height: 4.7em;
     text-shadow: 0 0 15px rgba(201, 152, 47, 0.15);
   }
 

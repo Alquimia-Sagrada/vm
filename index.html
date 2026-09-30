@@ -4,22 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Alquimia Sagrada · Ivana L. Lamberti</title>
-<link rel="icon" type="image/png" href="logo-alquimia.png">
-<link rel="shortcut icon" type="image/png" href="logo-alquimia.png">
-<link rel="apple-touch-icon" href="logo-alquimia.png">
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/icon-64.png">
+<link rel="icon" type="image/webp" href="assets/img/logo-alquimia.webp">
+<link rel="apple-touch-icon" href="assets/img/icon-180.png">
 <!-- Preconexión temprana a los CDNs (los scripts se cargan al final del body
      para no bloquear el primer renderizado; esto solo adelanta el DNS/TLS) -->
 <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
-<!-- Precarga de las 3 fuentes que se ven "arriba del pliegue" apenas carga
-     la página (título, tagline y el texto de la máquina de escribir). Esto
-     hace que el navegador empiece a descargarlas en paralelo con el HTML,
-     en vez de recién enterarse de que las necesita cuando ya calculó los
-     estilos — que es lo que causa el salto/demora de 1-2s. -->
+<!-- Precarga de las 4 fuentes que se ven "arriba del pliegue" apenas carga
+     la página: título del header (Tangerine 700), tagline (Tangerine 400),
+     texto de la máquina de escribir (Cormorant italic 400) y el texto de las
+     tarjetas de terapia (Manrope 400), que en mobile ya entra en la primera
+     pantalla. Esto hace que el navegador empiece a descargarlas en paralelo
+     con el HTML, en vez de recién enterarse de que las necesita cuando ya
+     calculó los estilos — que es lo que causa el salto/demora de 1-2s.
+     Ojo: pre-cargar de más compite por el ancho de banda, así que sólo van
+     las que de verdad se ven al cargar. -->
 <link rel="preload" href="assets/fonts/Tangerine-Bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/Tangerine-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/CormorantGaramond-Italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Tipografías: auto-alojadas en assets/fonts/ (ver @font-face en estilos.css) -->
 <link rel="stylesheet" href="assets/css/estilos.css">
@@ -144,7 +149,7 @@
     <div class="text-col">
 
       <div class="hero-block">
-        <img class="item-photo" src="assets/img/logo-alquimia.webp" alt="Alquimia Sagrada" loading="lazy" decoding="async">
+        <img class="item-photo" src="assets/img/logo-alquimia.webp" alt="Alquimia Sagrada" width="700" height="700" fetchpriority="high" decoding="async">
         <div class="typewriter-container">
           <span id="typewriter-text"></span><span class="cursor-blink"></span>
         </div>
@@ -270,6 +275,31 @@
     </div>
 
   </main>
+
+  <!-- Reubicación del portal en mobile — ANTES DEL PRIMER PINTADO.
+       En mobile .text-col es `display: contents`, así que .visual-col queda
+       como flex item directo de .scroll-container con order 0 implícito: sin
+       moverlo, el portal se dibujaría ARRIBA del hero, antes de las tarjetas.
+       Por eso hay que meterlo dentro de #mobileCarouselStage (que ya tiene
+       order 2), y eso se hacía desde main.js... pero main.js carga al final
+       del body, o sea DESPUÉS de que el navegador ya pintó: el portal
+       teletransportaba de debajo del carrusel al medio del hero y todo el
+       contenido se reacomodaba. Lighthouse medía CLS 0.215, atribuído
+       entero a div.hero-block. Este script inline corre en el mismo paso de
+       parseo que el markup de arriba, así que el reacomodo ocurre antes de
+       que haya algo pintado y no se registra como desplazamiento.
+       Es el mismo movimiento que hace placePortalForViewport() en main.js,
+       que sigue resolviendo el caso de rotar el teléfono y cruzar el
+       breakpoint de 960px (ahí el desplazamiento lo provoca el usuario al
+       girar, no la carga, así que no cuenta como CLS). -->
+  <script>
+    (function () {
+      if (!window.matchMedia('(max-width: 960px)').matches) return;
+      var stage = document.getElementById('mobileCarouselStage');
+      var visual = document.querySelector('.visual-col');
+      if (stage && visual && visual.parentNode !== stage) stage.prepend(visual);
+    })();
+  </script>
 
   <!-- TU CARTA DEL DÍA (TAROT · TIRADA DE 3) -->
   <section id="carta-del-dia" class="tarot-section">

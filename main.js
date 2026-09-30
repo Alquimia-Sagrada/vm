@@ -167,6 +167,10 @@ const audio = document.getElementById('bg-audio');
     // portal + tarjeta + puntitos formen un único bloque de una
     // pantalla completa y centrada, sin que nada quede afuera. En
     // desktop vuelve a su lugar original: columna sticky junto al texto.
+    // OJO: en la carga inicial este movimiento ya lo hizo el script inline
+    // de index.html, antes del primer pintado — hacerlo acá era lo que
+    // generaba el CLS de 0.215. Esta función queda para el caso de rotar
+    // el teléfono y cruzar el breakpoint.
     const textCol = document.querySelector('.text-col');
     const visualCol = document.querySelector('.visual-col');
     const mobileCarouselStage = document.getElementById('mobileCarouselStage');
@@ -174,8 +178,17 @@ const audio = document.getElementById('bg-audio');
     function placePortalForViewport() {
       if (!visualCol || !mobileCarouselStage || !textCol) return;
       if (MOBILE_QUERY.matches) {
-        mobileCarouselStage.prepend(visualCol);
-      } else {
+        // En mobile el script inline de index.html ya hizo este movimiento
+        // antes del primer pintado. El chequeo de parentNode evita repetir
+        // el prepend: sacar y volver a insertar el nodo después de pintado
+        // provoca un reflow innecesario, y Lighthouse lo medía como CLS.
+        if (visualCol.parentNode !== mobileCarouselStage) {
+          mobileCarouselStage.prepend(visualCol);
+        }
+      } else if (visualCol.parentNode !== textCol.parentNode ||
+                 visualCol.previousElementSibling !== textCol) {
+        // Volvemos a desktop: .visual-col tiene que ser el hermano que sigue
+        // a .text-col dentro de .scroll-container.
         textCol.insertAdjacentElement('afterend', visualCol);
       }
     }

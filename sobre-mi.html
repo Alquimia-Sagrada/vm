@@ -4,15 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sobre Mí · Alquimia Sagrada</title>
+<link rel="icon" type="image/png" sizes="64x64" href="assets/img/icon-64.png">
+<link rel="icon" type="image/webp" href="assets/img/logo-alquimia.webp">
+<link rel="apple-touch-icon" href="assets/img/icon-180.png">
 
-<!-- GSAP & ScrollTrigger -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-
-<!-- Precarga de las fuentes que se ven apenas carga la página (título del
-     header y encabezados de las tarjetas), igual que en index.html. -->
+<!-- Precarga de las fuentes que se ven apenas carga la página: título del
+     header (Tangerine 700), subtítulo del hero (Tangerine 400), "Sobre el
+     Terapeuta" (Cormorant 400) y el texto del cuerpo (Manrope 400). Antes
+     se precargaba CormorantGaramond-SemiBold, que no se usa arriba del
+     pliegue: el h2 del hero no declara font-weight, así que pide la 400. -->
 <link rel="preload" href="assets/fonts/Tangerine-Bold.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/CormorantGaramond-SemiBold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Tangerine-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/CormorantGaramond-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin>
 
 <!-- Tipografías: auto-alojadas en assets/fonts/ (ver @font-face en estilos.css) -->
 <link rel="stylesheet" href="assets/css/estilos.css">
@@ -288,7 +292,7 @@
     
     <div class="about-hero">
       <!-- Puedes cambiar "foto-terapeuta.jpg" por la imagen real del terapeuta -->
-      <img src="foto-terapeuta.jpg" alt="Terapeuta de Alquimia Sagrada" class="about-avatar" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2d6c1\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'16\' fill=\'%235c6d7e\'>Foto Terapeuta</text></svg>'">
+      <img src="foto-terapeuta.jpg" alt="Terapeuta de Alquimia Sagrada" class="about-avatar" width="197" height="194" fetchpriority="high" decoding="async" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\'><rect width=\'100%\' height=\'100%\' fill=\'%23e2d6c1\'/><text x=\'50%\' y=\'50%\' dominant-baseline=\'middle\' text-anchor=\'middle\' font-family=\'serif\' font-size=\'16\' fill=\'%235c6d7e\'>Foto Terapeuta</text></svg>'">
       <h2>Sobre el Terapeuta</h2>
       <p class="about-subtitle">Camino de integración holística y estelar</p>
     </div>
@@ -298,12 +302,18 @@
       <div class="gallery-wrap">
         <button type="button" class="gallery-arrow gallery-prev" id="galleryPrev" aria-label="Foto anterior">‹</button>
         <div class="gallery-track" id="galleryTrack">
-          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-1.jpg" alt="Encuentro grupal de cierre de formación" loading="lazy"></div>
-          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-2.jpg" alt="Sesión grupal de sintonización energética" loading="lazy"></div>
-          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-3.jpg" alt="Momento de contención y acompañamiento" loading="lazy"></div>
-          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-4.jpg" alt="Trabajo corporal en grupo" loading="lazy"></div>
-          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-5.jpg" alt="Senderismo holístico en las sierras de Córdoba" loading="lazy"></div>
-          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-6.jpg" alt="Fotografía durante una jornada de Senderismo" loading="lazy"></div>
+          <!-- El track es horizontal y todas las slides están en viewport a la
+               vez, así que loading="lazy" no difería nada: los 6 JPEG originales
+               (1.6 MB) se descargaban igual y el último en llegar era el LCP
+               (9.6s en móvil). Ahora hay dos anchos de WebP y el navegador
+               elige según el ancho real del carrusel (~88vw en móvil,
+               ~756px en desktop) y el DPR del device. -->
+          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-1-640.webp" srcset="assets/img/carrusel/sobre-mi-1-640.webp 640w, assets/img/carrusel/sobre-mi-1-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 756px" width="640" height="480" alt="Encuentro grupal de cierre de formación" loading="lazy" decoding="async"></div>
+          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-2-640.webp" srcset="assets/img/carrusel/sobre-mi-2-640.webp 640w, assets/img/carrusel/sobre-mi-2-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 756px" width="640" height="854" alt="Sesión grupal de sintonización energética" loading="lazy" decoding="async"></div>
+          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-3-640.webp" srcset="assets/img/carrusel/sobre-mi-3-640.webp 640w, assets/img/carrusel/sobre-mi-3-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 756px" width="640" height="480" alt="Momento de contención y acompañamiento" loading="lazy" decoding="async"></div>
+          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-4-640.webp" srcset="assets/img/carrusel/sobre-mi-4-640.webp 640w, assets/img/carrusel/sobre-mi-4-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 756px" width="640" height="480" alt="Trabajo corporal en grupo" loading="lazy" decoding="async"></div>
+          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-5-640.webp" srcset="assets/img/carrusel/sobre-mi-5-640.webp 640w, assets/img/carrusel/sobre-mi-5-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 756px" width="640" height="850" alt="Senderismo holístico en las sierras de Córdoba" loading="lazy" decoding="async"></div>
+          <div class="gallery-slide"><img src="assets/img/carrusel/sobre-mi-6-640.webp" srcset="assets/img/carrusel/sobre-mi-6-640.webp 640w, assets/img/carrusel/sobre-mi-6-1280.webp 1280w" sizes="(max-width: 900px) 88vw, 756px" width="640" height="1138" alt="Fotografía durante una jornada de Senderismo" loading="lazy" decoding="async"></div>
         </div>
         <button type="button" class="gallery-arrow gallery-next" id="galleryNext" aria-label="Foto siguiente">›</button>
       </div>
@@ -352,6 +362,13 @@
   <footer class="site-footer">
     <p>&copy; 2026 Alquimia Sagrada · Terapias Cósmicas. Todos los derechos reservados.</p>
   </footer>
+
+  <!-- GSAP & ScrollTrigger: se cargan acá, al final del body, y no en el
+       <head>, para no bloquear el primer renderizado con una conexión lenta
+       en mobile. Los <script> inline de abajo se ejecutan en orden de
+       documento, así que los encuentran ya cargados. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
 
   <script>
     // Bloqueo del clic derecho, del arrastre de imágenes y de los atajos de

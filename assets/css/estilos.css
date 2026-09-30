@@ -8,75 +8,96 @@
    ========================================= */
 
 /* ---------- Tipografías auto-alojadas ----------
-   woff2 primero (liviano, ~92% más chico) con .ttf como respaldo para
-   navegadores muy viejos que no lo soporten. Mientras los archivos no
-   estén en assets/fonts/, el navegador cae directo a la fuente de
-   reemplazo definida en --font-heading/--font-script/--font-body. */
+   Solo woff2 (~255 KB las 11 variantes). Los .ttf que hacían de respaldo
+   para navegadores pre-woff2 se eliminaron: el 100% de los navegadores
+   actuales los soporta, y mantenerlos multiplicaba por 13 el peso del
+   deploy (3.17 MB que nunca se descargaban).
+
+   MÉTRICAS DE LÍNEA (ascent/descent/line-gap-override)
+   Leídas de las tablas hhea reales de cada fuente y normalizadas a una caja
+   de línea única de 115% del em. Sin esto, cada `font-display: swap`
+   cambiaba la altura de línea y movía todo el contenido de la página:
+
+     Manrope            106.6% + 30.0% = 136.6%   <- 21.6 puntos de más
+     Cormorant Garamond  92.4% + 28.7% = 121.1%   <-  6.1 puntos de más
+     Arial  (respaldo)   90.5% + 21.2% = 114.9%
+     Times  (respaldo)   89.1% + 21.6% = 115.0%
+
+   Fijando las tres métricas en 90% / 22% / 3% (= 115%), la fuente de
+   respaldo y la webfont ocupan el mismo alto: el intercambio deja de
+   provocar CLS, y además todas las variantes de una familia comparten caja.
+   No se aplica `size-adjust` a propósito: su valor depende de qué fuente
+   de respaldo elige cada sistema (Arial en Windows, Roboto en Android,
+   San Francisco en iOS) y sin esa referencia sólo se acertaría en una
+   plataforma, empeorando el resto. */
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-Regular.woff2') format('woff2'),
-       url('../fonts/CormorantGaramond-Regular.ttf') format('truetype');
+  src: url('../fonts/CormorantGaramond-Regular.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-SemiBold.woff2') format('woff2'),
-       url('../fonts/CormorantGaramond-SemiBold.ttf') format('truetype');
+  src: url('../fonts/CormorantGaramond-SemiBold.woff2') format('woff2');
   font-weight: 600; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-Bold.woff2') format('woff2'),
-       url('../fonts/CormorantGaramond-Bold.ttf') format('truetype');
+  src: url('../fonts/CormorantGaramond-Bold.woff2') format('woff2');
   font-weight: 700; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-Italic.woff2') format('woff2'),
-       url('../fonts/CormorantGaramond-Italic.ttf') format('truetype');
+  src: url('../fonts/CormorantGaramond-Italic.woff2') format('woff2');
   font-weight: 400; font-style: italic; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Cormorant Garamond';
-  src: url('../fonts/CormorantGaramond-SemiBoldItalic.woff2') format('woff2'),
-       url('../fonts/CormorantGaramond-SemiBoldItalic.ttf') format('truetype');
+  src: url('../fonts/CormorantGaramond-SemiBoldItalic.woff2') format('woff2');
   font-weight: 600; font-style: italic; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
+/* Tangerine lleva una pila explícita en vez de `cursive` pelado: en
+   Windows `cursive` resuelve a Comic Sans, bastante más ancha, y eso
+   deformaba el título del header al hacerse el swap. */
 @font-face {
   font-family: 'Tangerine';
-  src: url('../fonts/Tangerine-Regular.woff2') format('woff2'),
-       url('../fonts/Tangerine-Regular.ttf') format('truetype');
+  src: url('../fonts/Tangerine-Regular.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Tangerine';
-  src: url('../fonts/Tangerine-Bold.woff2') format('woff2'),
-       url('../fonts/Tangerine-Bold.ttf') format('truetype');
+  src: url('../fonts/Tangerine-Bold.woff2') format('woff2');
   font-weight: 700; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Manrope';
-  src: url('../fonts/Manrope-Light.woff2') format('woff2'),
-       url('../fonts/Manrope-Light.ttf') format('truetype');
+  src: url('../fonts/Manrope-Light.woff2') format('woff2');
   font-weight: 300; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Manrope';
-  src: url('../fonts/Manrope-Regular.woff2') format('woff2'),
-       url('../fonts/Manrope-Regular.ttf') format('truetype');
+  src: url('../fonts/Manrope-Regular.woff2') format('woff2');
   font-weight: 400; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Manrope';
-  src: url('../fonts/Manrope-Medium.woff2') format('woff2'),
-       url('../fonts/Manrope-Medium.ttf') format('truetype');
+  src: url('../fonts/Manrope-Medium.woff2') format('woff2');
   font-weight: 500; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 @font-face {
   font-family: 'Manrope';
-  src: url('../fonts/Manrope-SemiBold.woff2') format('woff2'),
-       url('../fonts/Manrope-SemiBold.ttf') format('truetype');
+  src: url('../fonts/Manrope-SemiBold.woff2') format('woff2');
   font-weight: 600; font-style: normal; font-display: swap;
+  ascent-override: 90%; descent-override: 22%; line-gap-override: 3%;
 }
 
 /* ---------- Variables y reset base ---------- */
@@ -90,7 +111,7 @@
   --teal: #2f7681;
   --teal-dim: rgba(47, 118, 129, 0.2);
   --font-heading: 'Cormorant Garamond', serif;
-  --font-script: 'Tangerine', cursive;
+  --font-script: 'Tangerine', 'Snell Roundhand', 'Apple Chancery', 'Segoe Script', cursive;
   --font-body: 'Manrope', sans-serif;
 }
 
