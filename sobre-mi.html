@@ -70,6 +70,9 @@
 
   .about-avatar {
     width: min(50vw, 220px);
+    /* Mismo caso que el logo del hero: el atributo height="194" del <img>
+       se aplicaba como height:194px y deformaba el círculo. */
+    height: auto;
     aspect-ratio: 1/1;
     object-fit: cover;
     border-radius: 50%;
