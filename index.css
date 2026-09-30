@@ -1303,11 +1303,27 @@
     }
 
     /* "Stage" del carrusel: agrupa portal + tarjeta + puntitos en un
-       único bloque de una pantalla completa (100dvh), centrado
-       verticalmente, para que entre todo sin necesitar scroll extra. El
-       portal físicamente se reubica acá adentro por JS (ver script),
-       solo mientras estamos en este ancho — en escritorio nunca se
-       mueve y sigue siendo la columna sticky de siempre. */
+       único bloque de una pantalla completa, centrado verticalmente,
+       para que entre todo sin necesitar scroll extra. El portal
+       físicamente se reubica acá adentro por JS (ver script), solo
+       mientras estamos en este ancho — en escritorio nunca se mueve y
+       sigue siendo la columna sticky de siempre.
+
+       OJO con la unidad: acá estaba 100dvh y por eso el bloque "tiraba"
+       al scrollear. dvh significa "dynamic viewport height" y en un
+       celular cambia en vivo, cada vez que la barra de direcciones del
+       navegador se contrae o se despliega. Como el alto del stage
+       cambiaba a mitad de scroll, todo lo que venía abajo se corría y
+       aparecían tirones bruscos — de los saltos que no se pueden
+       eliminar del todo, pero que sí se pueden hacer más leves.
+
+       svh ("small viewport height") es el alto con la barra visible, y
+       ese valor NO cambia durante el scroll, así que el bloque queda
+       quieto. El precio: cuando la barra se oculta queda un huequito
+       al fondo, que es preferible a que el contenido salte.
+
+       El 100vh de abajo queda como fallback para navegadores que no
+       conozcan svh (vh en mobile es el viewport grande, también fijo). */
     .mobile-carousel-stage {
       order: 2;
       display: flex;
@@ -1316,7 +1332,7 @@
       justify-content: center;
       width: 100%;
       min-height: 100vh;
-      min-height: 100dvh;
+      min-height: 100svh;
       box-sizing: border-box;
       padding: 2rem 0;
     }
