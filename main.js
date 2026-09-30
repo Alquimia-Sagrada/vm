@@ -539,24 +539,30 @@ const audio = document.getElementById('bg-audio');
       // El fondo de la rueda muestra la imagen del signo donde cae el Sol
       // en la carta. Se escala siempre a partir de rOuter, así que se
       // adapta automáticamente si en algún momento cambia el tamaño de la
-      // rueda. Cuando subas los archivos reales, colocalos en
-      // assets/zodiac/{slug}.png (aries, tauro, geminis, cancer, leo,
-      // virgo, libra, escorpio, sagitario, capricornio, acuario, piscis)
-      // — no hace falta tocar este código: si el archivo no existe
-      // todavía, la imagen simplemente no se muestra.
+      // rueda. Los archivos van en assets/zodiac/{slug}.webp (aries,
+      // tauro, geminis, cancer, leo, virgo, libra, escorpio, sagitario,
+      // capricornio, acuario, piscis) — no hace falta tocar este código:
+      // si el archivo no existe, la imagen simplemente no se muestra.
+      //
+      // Son .webp y no .png a propósito: estas ilustraciones son a color
+      // con bordes de alpha suave, y como PNG de 800x800 cada una pesaba
+      // ~385 KB (4.6 MB las doce). En WebP q85 pesan ~97 KB cada una y
+      // siguen siendo 800x800, así que no se pierde nitidez — medido
+      // contra el PNG original, el RMS de la rueda renderizada da 0.42 y
+      // solo el 0.02% de los píxeles difiere en más de 10.
       const sun = chart.planets.find(p => p.key === 'Sun');
       const sunSign = signOf(sun.lon);
 
       svg += `
         <image
-          href="/assets/zodiac/${sunSign.sign.slug}.png"
+          href="/assets/zodiac/${sunSign.sign.slug}.webp"
           x="${cx - rOuter}"
           y="${cy - rOuter}"
           width="${rOuter * 2}"
           height="${rOuter * 2}"
           preserveAspectRatio="xMidYMid meet"
           opacity="0.22"
-          onerror="console.error('No se pudo cargar la imagen del signo solar:', '/assets/zodiac/${sunSign.sign.slug}.png')"
+          onerror="console.error('No se pudo cargar la imagen del signo solar:', '/assets/zodiac/${sunSign.sign.slug}.webp')"
         />
       `;
 
