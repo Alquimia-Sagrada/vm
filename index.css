@@ -766,17 +766,6 @@
     font-size: 0.95rem;
   }
 
-  .salon-directions {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: 1.1rem;
-    padding: 0.95rem 2.2rem;
-    font-size: 0.95rem;
-    font-family: var(--font-body);
-    text-decoration: none;
-  }
-
   .salon-data-col { padding-top: 0.25rem; }
 
   .salon-data-title {
