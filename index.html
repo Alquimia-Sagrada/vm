@@ -364,6 +364,47 @@
       <span id="whatsapp-cta-label">¡Quiero agendar una sesión!</span>
     </a>
     <p class="agenda-note">Te responderé a la brevedad para confirmar tu sesión.</p>
+
+    <!-- UBICACIÓN DEL SALÓN — el mapa se carga diferido, ver loadSalonMap en main.js.
+         El div arranca vacío a propósito: si el JS no corre, queda un placeholder
+         con la dirección en texto (que además es mejor para SEO y para lectores
+         de pantalla que para nadie pinche un mapa). -->
+    <div class="salon-info">
+      <div class="salon-map-col">
+        <div class="salon-map-shell">
+          <div id="salon-map" class="salon-map" role="img"
+               aria-label="Mapa de la ubicación del salón de terapias, en Villa María, Córdoba"></div>
+          <noscript>
+            <p class="salon-map-fallback">Villa María, Córdoba, Argentina.</p>
+          </noscript>
+          <p class="salon-map-placeholder" id="salon-map-placeholder" aria-hidden="true">
+            <span class="salon-map-placeholder-pin">✦</span>
+            <span>Villa María, Córdoba</span>
+          </p>
+        </div>
+        <a class="btn salon-directions"
+           href="https://www.google.com/maps/search/?api=1&amp;query=Villa+Mar%C3%ADa%2C+C%C3%B3rdoba%2C+Argentina"
+           target="_blank" rel="noopener">Cómo llegar</a>
+      </div>
+
+      <div class="salon-data-col">
+        <h3 class="salon-data-title">El salón</h3>
+        <p class="salon-data-text">Villa María, Córdoba, Argentina.</p>
+
+        <h3 class="salon-data-title">Horarios de atención</h3>
+        <dl class="salon-hours">
+          <div class="salon-hours-row">
+            <dt>Lunes a sábado</dt>
+            <dd>9 a 22 hs</dd>
+          </div>
+          <div class="salon-hours-row">
+            <dt>Domingos</dt>
+            <dd>11 a 18 hs</dd>
+          </div>
+        </dl>
+        <p class="salon-hours-note">Los turnos se coordinan con <strong>24 hs de anticipación</strong>.</p>
+      </div>
+    </div>
   </section>
 
 
@@ -380,7 +421,7 @@
         <ul class="footer-links">
           <li><a href="https://wa.me/5493535654858" target="_blank">📞 3535654858</a></li>
           <li><a href="mailto:ivanalorelamberti@gmail.com">✉️ ivanalorelamberti@gmail.com</a></li>
-          <li><a href="#">📍 Villa María, Cba.</a></li>
+          <li><a href="https://www.google.com/maps/search/?api=1&amp;query=Villa+Mar%C3%ADa%2C+C%C3%B3rdoba%2C+Argentina" target="_blank" rel="noopener">📍 Villa María, Cba.</a></li>
         </ul>
       </div>
       <div class="footer-col">

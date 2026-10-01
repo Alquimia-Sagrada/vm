@@ -49,6 +49,106 @@
 })();
 
 (function () {
+// =========================================
+  // MAPA DEL SALÓN (Leaflet + OpenStreetMap)
+  // =========================================
+  // Mismo criterio que la carta natal: Leaflet son ~42 KB y las teselas son
+  // del orden de cientos de KB, así que no se piden hasta que la sección
+  // entra cerca de pantalla. Mientras tanto el div del mapa queda vacío y se
+  // ve el placeholder con la ciudad en texto (que además no depende de JS).
+  (function () {
+    const LAT = -32.410624;
+    const LON = -63.243581;
+
+    const mapEl = document.getElementById('salon-map');
+    const placeholder = document.getElementById('salon-map-placeholder');
+    if (!mapEl) return;
+
+    let salonMapPromise = null;
+
+    // Idempotente: si el observer y el fallback llaman al mismo tiempo, no
+    // se inyecta Leaflet dos veces.
+    window.loadSalonMap = function () {
+      if (salonMapPromise) return salonMapPromise;
+      salonMapPromise = new Promise((resolve, reject) => {
+        const css = document.createElement('link');
+        css.rel = 'stylesheet';
+        css.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css';
+        document.head.appendChild(css);
+
+        const js = document.createElement('script');
+        js.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js';
+        js.onload = () => {
+          // Si otro script ya lo cargó, el onload puede no volver a disparar.
+          if (!window.L) return reject(new Error('Leaflet no quedó disponible'));
+          resolve();
+        };
+        js.onerror = () => reject(new Error('No se pudo cargar Leaflet'));
+        document.body.appendChild(js);
+      });
+      return salonMapPromise;
+    };
+
+    function drawSalonMap() {
+      const map = L.map(mapEl, {
+        scrollWheelZoom: false, // si no, el scroll de la página queda atrapado
+        zoomControl: true,
+        attributionControl: true
+      }).setView([LAT, LON], 13);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+
+      // divIcon en vez del marcador default: el PNG del sprite son 4 requests
+      // que no necesitamos, y así el pin toma la paleta del sitio.
+      L.marker([LAT, LON], {
+        icon: L.divIcon({
+          className: '',
+          html: '<div class="salon-pin"></div>',
+          iconSize: [26, 26],
+          iconAnchor: [13, 26],
+          popupAnchor: [0, -24]
+        })
+      }).addTo(map).bindPopup('Alquimia Sagrada · Villa María, Córdoba');
+
+      if (placeholder) placeholder.style.display = 'none';
+
+      // Map tiene alto 0 hasta que se le da invalidateSize; sin esto los
+      // tiles quedan a medio render en contenedores con aspect-ratio.
+      requestAnimationFrame(() => map.invalidateSize());
+    }
+
+    function initSalonMap() {
+      window.loadSalonMap()
+        .then(drawSalonMap)
+        .catch(() => {
+          // Sin Leaflet no hay mapa, pero el placeholder ya dice dónde es el
+          // salón y queda el botón "Cómo llegar", así que no hay que hacer
+          // nada más: dejamos el texto y evitamos romper la página.
+          if (placeholder) placeholder.style.display = '';
+        });
+    }
+
+    const salonSection = document.getElementById('agendar');
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            initSalonMap();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { rootMargin: '400px 0px' });
+      if (salonSection) observer.observe(salonSection);
+    } else if (salonSection) {
+      initSalonMap();
+    }
+  })();
+})();
+
+(function () {
 const audio = document.getElementById('bg-audio');
     audio.volume = 0.5;
     let isPlaying = false;
